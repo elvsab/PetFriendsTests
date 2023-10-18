@@ -55,3 +55,34 @@ def test_successful_update_self_pet_info(name='Жучка', animal_type='пес'
         assert result['name'] == name
     else:
         raise Exception("There are no my pets")
+
+#2 дополнительных теста для задания 24.2.4
+
+
+def test_add_info_without_photo(name='Sohatyi', animal_type='horse', age='17'):
+    _, auth_key = pf.get_api_key(valid_email, valid_password)
+
+    status, result = pf.add_info_without_photo(auth_key, name, animal_type, age)
+
+    assert status == 200
+    assert result['name'] == name
+
+
+def test_add_photo_of_pet(pet_photo='images\catdog.jpg'):
+    pet_photo = os.path.join(os.path.dirname(__file__), pet_photo)
+    _, auth_key = pf.get_api_key(valid_email, valid_password)
+    _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
+
+    if len(my_pets['pets']) > 0:
+        status, result = pf.set_photo(auth_key, my_pets['pets'][0]['id'],  pet_photo=pet_photo)
+        assert status == 200
+        assert result['pet_photo'] != " "
+    else:
+        raise Exception('There is no pet')
+
+
+
+
+
+
+
